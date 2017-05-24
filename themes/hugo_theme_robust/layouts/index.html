@@ -1,0 +1,110 @@
+<div class="index">
+  {{ partial "default_head.html" . }}
+  <div class="row">
+      <div class="articles">
+        <div class="row">
+          {{ range $key, $value := .Paginator.Pages }}
+          <div class="col-sm-5">
+            {{ .Render "li" }}
+          </div>
+          {{ end }}
+          <div class="col-sm-2"></div>
+          <div class="col-md-4 fulbox" style="background-color:white;max-width:350px">
+            <div class="whitebox">
+              <div class="greybox">
+                <div class="slider" style="margin:10px;">
+                  <p id="slidval" style="color:#5D6B7E;font-size:15px;">Amount
+                    <strong style="padding-left:10px;font-size:20px;">$<output style="color:#5D6B7E;font-size:20px;display: inline-block">200</output></strong></p>
+                  <input id="slidy" type="range" min="100" max="250" step="10" value="200">
+                  <div class="row">
+                    <p class="col-md-6 subrate">100</p>
+                    <p class="col-md-6 subrate" style="text-align:right">250</p>
+                  </div>
+                </div>
+                <p style="color:#5D6B7E;font-weight:light;">Repay on
+                <input style="border:none;font-size:20px;font-weight:bold;max-width:200px;margin-bottom:20px;" id="alt" class=flatpickr data-inline=true , style="margin:10px;"></p>
+              </div>
+            </div>
+            <div class="lgreybox row">
+              <div class="col-md-4 blgrey" style="">
+                <div class="blgreyb" style="font-size:10px;">Amount</div>
+                <p class="blgreyb" style="margin:0px;padding:0px;"><strong style="font-size:18px;">$<output style="color:#5D6B7E;font-size:20px;display: inline-block">200</output></strong></p>
+                <div class="blgreyb" style="font-size:10px;">for  <daynum id="daynum">15</daynum>  days</div>
+              </div>
+              <div class="col-md-4 blgrey" style="">
+                <div class="blgreyb" style="font-size:10px;">Interest <span style="background-color:#5D6B7E;color:white;border:1 solid #5D6B7E;border-radius:10px;"> ❓ </span></div>
+                <p class="blgreyb" style="margin:0px;padding:0px;"><strong style="font-size:18px;">$<output style="color:#5D6B7E;font-size:20px;display: inline-block">35.20</output></strong></p>
+                <div class="blgreyb" style="font-size:10px;">for X days</div>
+              </div>
+              <div class="col-md-4 blgrey" style="">
+                <div class="blgreyb" style="font-size:10px;">Repayment</div>
+                <p class="blgreyb" style="margin:0px;padding:0px;"><strong style="font-size:18px;">$<output style="color:#5D6B7E;font-size:20px;display: inline-block"> 235.20 </output></strong></p>
+                <div class="blgreyb" style="font-size:10px;">on <span id="realdate">June <span id="datepre">nothing</span>, 2017</span> </div>
+              </div>
+            </div>
+            <div class="apply row" style="height:60px;padding-left:20px;padding-right:20px;">
+              <a href="https://github.com/freakuency">
+                <button type="button" class="btn btn-primary" style="min-width:100%;height:40px;background-color:#77c550;border:1px solid grey" name="button">Recruit Now</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+<img src="../images/lendup.png" id="logo" alt="pic">
+
+  <script type="text/javascript">
+    Flatpickr.defaultConfig.animate = window.navigator.userAgent.indexOf('MSIE') === -1;
+  //  var ans = document.querySelectorAll('daynum')[0];
+    fp = flatpickr("#alt", {
+     dateFormat:"D, d F",
+     minDate: new Date().fp_incr(9),
+     maxDate: new Date().fp_incr(32),
+     defaultDate:new Date().fp_incr(15),
+
+     onChange: function(obj, dateStr) {
+       //var firstDate = new Date(2008,01,12);
+       //var secondDate = new Date(2008,01,22);
+       str=Flatpickr.prototype.parseDate(dateStr, "D, d F");
+       str=Flatpickr.prototype.formatDate(str, "F d, Y");
+       document.querySelector("#realdate").innerText =str;
+       var oneDay = 24*60*60*1000;
+       a=Flatpickr.prototype.parseDate(dateStr, "D, d F")
+       a=Flatpickr.prototype.formatDate(a, "d");
+       b=Flatpickr.prototype.parseDate(dateStr, "D, d F")
+       b=Flatpickr.prototype.formatDate(b, "m");
+       var dati = new Date();
+       var c = dati.getDate();
+       var d = dati.getMonth();
+       var firstDate = new Date(2017,b,a);
+       var secondDate = new Date(2017,d,c);
+       var diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime())/(oneDay)));
+       document.querySelector("#daynum").innerText =(diffDays-30).toString();
+     },
+    });
+  </script>
+  <script>
+      var output = document.querySelectorAll('output')[0];
+      var foutput = document.querySelectorAll('output')[1];
+      var finter = document.querySelectorAll('output')[2];
+      var frepay = document.querySelectorAll('output')[3];
+      $(document).on('input', 'input[type="range"]', function(e) {
+          output.innerHTML = e.currentTarget.value;
+          foutput.innerHTML = e.currentTarget.value;
+          finter.innerHTML = ((e.currentTarget.value/100)*17.60).toFixed(2);
+          frepay.innerHTML = (+(e.currentTarget.value)+ +((e.currentTarget.value/100)*17.60).toFixed(2)).toFixed(2);
+      });
+      $('input[type="range"]').rangeslider({
+              polyfill: false
+      });
+  </script>
+  <script type="text/javascript">
+  function myFunction() {
+    var d = new Date();
+    d.setDate(d.getDate() + 15);
+    var n = ("0" + d.getDate()).slice(-2)
+    document.getElementById("datepre").innerHTML = n;
+  }
+  </script>
+</div>
